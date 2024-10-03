@@ -77,12 +77,14 @@ keypress(struct state *state, enum wl_keyboard_key_state key_state, xkb_keysym_t
 			state->run = false;
 			break;
 		case XKB_KEY_j:
+		case XKB_KEY_Down:
 			if (state->menu_select < state->menu_length - 1) {
 				state->menu_select++;
 				update = true;
 			}
 			break;
 		case XKB_KEY_k:
+		case XKB_KEY_Up:
 			if (state->menu_select > 0) {
 				state->menu_select--;
 				update = true;

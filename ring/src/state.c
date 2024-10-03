@@ -89,7 +89,7 @@ state_init(int argc, char *argv[]) {
 
 	const char *usage = "Usage: ring [-f font] [-N color] [-n color] [-S color] [-s color]\n";
 	int opt;
-	while ((opt = getopt(argc, argv, "hf:N:n:S:s")) != -1) {
+	while ((opt = getopt(argc, argv, "hf:N:n:S:s:")) != -1) {
 		switch (opt) {
 			case 'f':
 				state->font = optarg;
@@ -124,21 +124,20 @@ state_init(int argc, char *argv[]) {
 		exit(EXIT_FAILURE);
 	}
 
-
-	char buf[BUFSIZ];
-	fgets(buf, BUFSIZ, stdin);
-	char *split = strtok(buf, "|");
-	state->width = get_text_width(state->font, split);
-
 	int width;
-	do {
-		state->menu[state->menu_length] = split;
-		width = get_text_width(state->font, split);
+	char buf[BUFSIZ];
+	while (fgets(buf, BUFSIZ, stdin)) {
+		char *p = strchr(buf, '\n');
+		printf("%s\n", p);
+		if (p) {
+			*p = '\0';
+		}
+		state->menu[state->menu_length] = strdup(buf);
+		state->menu_length++;
+		width = get_text_width(state->font, strdup(buf));
 		if (width > state->width)
 			state->width = width;
-		state->menu_length++;
-		split = strtok(NULL, "|");
-	} while (split);
+	}
 
 	// state->width = 320;
 	state->font_height = get_font_height(state->font);
